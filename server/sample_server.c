@@ -28,7 +28,6 @@ int main(int argc, char **argv)
 
         FILE *fp;
         char filename[50];
-        int flag = 0;
         /* UDPのソケットを設定 */
        
 	port_number = SERVER_PORT;
@@ -78,11 +77,6 @@ int main(int argc, char **argv)
 
         /* sendpkt(長さ4バイト)にseq_num(長さ4バイト)の内容をコピー */
         memcpy(sendpkt,(char *)&seq_num,4);
-    if((seq_num == 2 || seq_num == 11) & flag==1){
-      flag = 0;
-      continue;
-    }
-    flag = 1;
 	/* sendpktの内容をACKパケットとして相手に送信 */
         sendto(sockfd, sendpkt, 4, 0, 
 				(struct sockaddr *)&cliaddr, 
