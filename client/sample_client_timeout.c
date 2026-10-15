@@ -93,7 +93,6 @@ main(int argc, char **argv)
 
 	/* sendpktの先頭から5バイト以降に，senddataの内容を num_bytes_dataの長さだけコピー */
 	memcpy(sendpkt+4,senddata,num_bytes_data);
-e
 	/* パケットの長さを num_bytes_pktに設定 */
 	num_bytes_pkt = num_bytes_data + 4;
   while(1){
