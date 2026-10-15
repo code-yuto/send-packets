@@ -2,3 +2,5 @@ jikken/
 client/sample_client
 server/sample_server
 *.jpg
+client/kadai1_client
+server/kadai1_server
