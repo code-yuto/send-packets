@@ -76,8 +76,13 @@ int main(int argc, char **argv)
     /* ファイルサイズに等しい長さのデータを相手に送ると設定       */
     /* この数を変数 num_bytes_data に格納する                     */
 
-    while (filesize > 1000) {
-        num_bytes_data = 1000;
+    while (1) {
+        if(filesize>1000){
+          num_bytes_data = 1000;
+        }else{
+          num_bytes_data = filesize;
+          send_seq_num = 0;
+        }
         /* パケットの順序番号を 1と設定消しました。 */
 
         /* num_bytes_dataの長さのデータをファイルから読み込んで */
@@ -106,44 +111,12 @@ int main(int argc, char **argv)
             printf("ACK timeout.\n");
         else /* num_bytes_recv = 0の場合はタイムアウト以外のエラー*/
             printf("ACK error.\n");
+        
+        if (send_seq_num == 0) /* 最後のパケットを送り終えたら終了 */
+            break;
         send_seq_num++;
         filesize -= num_bytes_data;
     }
-
-    if (filesize < 1000) {
-        num_bytes_data = filesize;
-        /* パケットの順序番号を 1と設定消しました。 */
-        send_seq_num = 0;
-        /* num_bytes_dataの長さのデータをファイルから読み込んで */
-        /* senddataに格納                                       */
-        fread(senddata, num_bytes_data, 1, fp);
-
-        /* sendpktの先頭4バイトに順序番号の変数 send_seq_num(4バイト)の内容をコピー */
-        memcpy(sendpkt, (char *)&send_seq_num, 4);
-
-        /* sendpktの先頭から5バイト以降に，senddataの内容を num_bytes_dataの長さだけコピー */
-        memcpy(sendpkt + 4, senddata, num_bytes_data);
-
-        /* パケットの長さを num_bytes_pktに設定 */
-        num_bytes_pkt = num_bytes_data + 4;
-
-        /* sendataの先頭から num_bytes_pkt　バイトを相手に送信 */
-        sendto(sockfd, sendpkt, num_bytes_pkt, 0,
-               (struct sockaddr *)&servaddr,
-               sizeof(servaddr));
-
-        printf("Sending data of %d bytes, seq_num=%d....\n", num_bytes_data, send_seq_num);
-    }
-
-    /* 相手から ACK パケットを受信 */
-    num_bytes_recv = recvfrom(sockfd, recvpkt, MAXPKTLEN, 0, NULL, NULL);
-
-    if (num_bytes_recv > 0) /* num_bytes_recvが0以上であった場合，正常に受信している*/
-        printf("ACK received.\n");
-    else if (num_bytes_recv < 0) /* num_bytes_recvが0以下であった場合，recvfromにエラーが生じている*/
-        printf("ACK timeout.\n");
-    else /* num_bytes_recv = 0の場合はタイムアウト以外のエラー*/
-        printf("ACK error.\n");
 
     fclose(fp);
     close(sockfd);
