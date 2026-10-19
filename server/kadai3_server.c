@@ -72,8 +72,8 @@ int main(int argc, char **argv)
 
         if (seq_num == -2) {
             /* 順序番号 -2 のときはデータ部がファイル名なので，その名前でファイルをオープン */
-            recvdata[num_bytes_data] = '\0';
             fp = fopen(recvdata, "wb");
+            recvdata[num_bytes_data] = '\0';
             if (fp == NULL) {
                 printf("File open error: %s\n", recvdata);
                 return -1;
