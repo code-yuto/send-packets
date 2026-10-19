@@ -4,3 +4,5 @@ server/sample_server
 *.jpg
 client/kadai1_client
 server/kadai1_server
+client/kadai2_client
+server/kadai2_server
