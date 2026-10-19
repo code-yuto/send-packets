@@ -6,3 +6,5 @@ client/kadai1_client
 server/kadai1_server
 client/kadai2_client
 server/kadai2_server
+client/kadai3_client
+server/kadai3_server
