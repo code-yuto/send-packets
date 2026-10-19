@@ -71,13 +71,11 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    /* 送るファイル名を1つずつ入力 */
     for (i = 1; i <= n; i++) {
+        /* 送るファイル名を入力 */
         printf("File name %d: ", i);
         scanf("%49s", filename[i - 1]);
-    }
 
-    for (i = 1; i <= n; i++) {
         /* 相手に送信する画像ファイルをオープン */
         if (NULL == (fp = fopen(filename[i - 1], "rb"))) {
             perror("File open error:");
@@ -90,7 +88,7 @@ int main(int argc, char **argv)
 
         /* 最初に順序番号 -2 のパケットでファイル名を送る */
         send_seq_num = -2;
-        num_bytes_data = strlen(filename[i - 1]);
+        num_bytes_data = strlen(filename[i - 1]) + 1; /* 終端の'\0'まで送る */
         memcpy(sendpkt, (char *)&send_seq_num, 4);
         memcpy(sendpkt + 4, filename[i - 1], num_bytes_data);
         num_bytes_pkt = num_bytes_data + 4;
